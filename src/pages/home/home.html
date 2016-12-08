@@ -1,0 +1,100 @@
+<ion-header>
+    <ion-navbar no-border-bottom>
+        <ion-title>
+            首页
+        </ion-title>
+    </ion-navbar>
+    <ion-toolbar no-border-top>
+        <ion-segment [(ngModel)]="segmentModel">
+            <ion-segment-button value="news" (ionSelect)="clickSegment(0)">
+                新闻
+            </ion-segment-button>
+            <ion-segment-button value="joke" (ionSelect)="clickSegment(1)">
+                笑话
+            </ion-segment-button>
+            <ion-segment-button value="health" (ionSelect)="clickSegment(2)">
+                健康
+            </ion-segment-button>
+            <ion-segment-button value="pe" (ionSelect)="clickSegment(3)">
+                体育
+            </ion-segment-button>
+            <ion-segment-button value="special" (ionSelect)="clickSegment(4)">
+                奇闻
+            </ion-segment-button>
+            <ion-segment-button value="beautiful" (ionSelect)="clickSegment(5)">
+                美图
+            </ion-segment-button>
+        </ion-segment>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content (swipe)="swipeEvent($event)">
+    <ion-refresher (ionRefresh)="doRefresh($event)" [pullMin]=80>
+        <ion-refresher-content pullingIcon="ios-arrow-round-down" pullingText="下拉刷新" refreshingSpinner="circles" refreshingText="刷新中...">
+        </ion-refresher-content>
+    </ion-refresher>
+    <div [ngSwitch]="segmentModel">
+        <ion-list *ngSwitchCase="'news'">
+            <ion-item *ngFor="let newslist of newsLists" (click)="open(newslist.url)" text-wrap>
+                <ion-thumbnail *ngIf="newslist.picUrl" item-right>
+                    <img [src]="newslist.picUrl">
+                </ion-thumbnail>
+                <h2>{{newslist.title}}</h2>
+                <p>{{newslist.description}}</p>
+            </ion-item>
+        </ion-list>
+
+        <ion-list *ngSwitchCase="'joke'">
+            <ion-item *ngFor="let joke of jokes" text-wrap>
+                <h2>{{joke.title}}</h2>
+                <div (click)="viewImage(joke.img)">
+                    <img [src]="joke.img">
+                </div>
+                <p>{{joke.ct|date:'y-MM-dd HH:mm:ss'}}</p>
+            </ion-item>
+        </ion-list>
+
+        <ion-list *ngSwitchCase="'health'">
+            <ion-item *ngFor="let health of healths" text-wrap>
+                <h2>{{health.title}}</h2>
+                <p>{{health.tname}}</p>
+                <div (click)="viewImage(health.img)">
+                    <img [src]="health.img">
+                </div>
+            </ion-item>
+        </ion-list>
+
+        <ion-list *ngSwitchCase="'pe'">
+            <ion-item *ngFor="let pe of penews" (click)="open(pe.url)" text-wrap>
+                <h2>{{pe.title}}</h2>
+                <p>{{pe.description}}</p>
+                <ion-thumbnail item-right>
+                    <img [src]="pe.picUrl">
+                </ion-thumbnail>
+            </ion-item>
+        </ion-list>
+
+        <ion-list *ngSwitchCase="'special'">
+            <ion-item *ngFor="let special of specials" (click)="open(special.url)" text-wrap>
+                <h2>{{special.title}}</h2>
+                <p>{{special.description}}</p>
+                <div (click)="viewImage(special.picUrl)">
+                    <img [src]="special.picUrl">
+                </div>
+            </ion-item>
+        </ion-list>
+        <ion-list *ngSwitchCase="'beautiful'">
+            <ion-item *ngFor="let image of images" (click)="open(image.url)" text-wrap>
+                <h2>{{image.title}}</h2>
+                <p>{{image.description}}</p>
+                <div (click)="viewImage(image.picUrl)">
+                    <img [src]="image.picUrl">
+                </div>
+            </ion-item>
+        </ion-list>
+    </div>
+    <ion-infinite-scroll (ionInfinite)="doInfinite($event)">
+        <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="加载更多...">
+        </ion-infinite-scroll-content>
+    </ion-infinite-scroll>
+</ion-content>
